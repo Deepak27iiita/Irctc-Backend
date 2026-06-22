@@ -1,14 +1,13 @@
-version: "3.8"
 services:
   postgres:
     image: postgres:13
     container_name: irctc-postgres
     environment:
-      POSTGRES_USER: johndoe
-      POSTGRES_PASSWORD: randompassword
-      POSTGRES_DB: mydb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: irctcpass
+      POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      - "5354:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
@@ -19,8 +18,21 @@ services:
       - "3001:3000"
     depends_on:
       - postgres
+      - redis
     environment:
-      DATABASE_URL: "postgresql://johndoe:randompassword@postgres:5432/mydb?schema=public"
+      DATABASE_URL: "postgresql://admin:irctcpass@postgres:5432/postgres?schema=public"
+      REDIS_URL: "redis://:irctcpass@redis:6379"
+      PORT: 3000
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: irctc-redis
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    environment:
+      REDIS_ARGS: "--requirepass irctcpass"
+      REDISINSIGHT_AUTH_DISABLED: "true"
 
 volumes:
   postgres-data:

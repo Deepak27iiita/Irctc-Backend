@@ -1,22 +1,22 @@
 // src/config/prisma.js
 
 const { PrismaClient } = require("@prisma/client");
-const { config } = require(".");
+const { PrismaPg } = require("@prisma/adapter-pg");
+const { Pool } = require("pg");
+
+const connectionString = process.env.DATABASE_URL;
 
 const globalForPrisma = global;
 
-const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    datasources: {
-      db: {
-        url: config.DATABASE_URL,
-      },
-    },
+if (!globalForPrisma.prisma) {
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
+  globalForPrisma.prisma = new PrismaClient({
+    adapter,
+    log: ["error", "warn"],
   });
-
-if (config.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
 }
+
+const prisma = globalForPrisma.prisma;
 
 module.exports = prisma;

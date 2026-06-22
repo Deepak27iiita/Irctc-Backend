@@ -18,6 +18,10 @@ class RedisClient {
                 maxRetriesPerRequest: 3,
 
                 retryStrategy(times) {
+                    if (times > 20) {
+                        logger.error('Redis max retry attempts reached. Giving up.');
+                        return null; // stop retrying
+                    }
                     const delay = Math.min(times * 50, 2000);
 
                     logger.warn(

@@ -1,51 +1,23 @@
-name: irctc-backend
+# Use an official Node.js runtime as a parent image
+FROM node:20-slim
 
-services:
-  postgres:
-    image: postgres:15
-    container_name: postgres
-    restart: always
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: irctcpass
-      POSTGRES_DB: postgres
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
-    ports:
-      - "5432:5432"
+# Install any needed packages
+RUN npm install
 
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+# Copy the rest of the application's source code
+COPY . .
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin
+# Generate Prisma Client
+RUN npx prisma generate
 
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+# Make port 3000 available to the world outside this container
+EXPOSE 3000
 
-    ports:
-      - "8081:80"
-
-    depends_on:
-      - postgres
-
-  redis:
-    image: redis/redis-stack:6.2.6-v19
-    container_name: redis
-    restart: always
-
-    environment:
-      REDIS_ARGS: "--requirepass irctcpass"
-
-    ports:
-      - "6379:6379"
-      - "8001:8001"
-
-    volumes:
-      - redis_data:/data
-
-volumes:
-  postgres_data:
-  redis_data:
+# Define the command to run the app
+CMD [ "npm", "start" ]
