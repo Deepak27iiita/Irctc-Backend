@@ -1,4 +1,4 @@
-const { ConflictError, BadRequestError, NotFoundError, TooManyRequestsError } = require("../utils/error");
+const { ConflictError, BadRequestError, NotFoundError, TooManyRequestsError, UnauthorizedError } = require("../utils/error");
 const prisma = require("../config/prisma");
 const bcrypt = require("bcryptjs");
 const { sendOtpEmail, verifyOtpEmail } = require("../utils/email");
@@ -96,7 +96,46 @@ const verifyOtp = async (otpSessionId, otp) => {
     return { user };
 };
 
+// ─── Login ────────────────────────────────────────────────────────────────────
+
+const login = async (email, password) => {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+        throw new UnauthorizedError("Invalid email or password");
+    }
+
+    if (!user.password) {
+        throw new UnauthorizedError("Invalid email or password");
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        throw new UnauthorizedError("Invalid email or password");
+    }
+
+    return user;
+};
+
+// ─── Create Session ───────────────────────────────────────────────────────────
+
+const createSession = async (user) => {
+    const token = crypto.randomBytes(32).toString("hex");
+    const sessionData = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+    };
+    
+    // Store in redis for 7 days (604800 seconds)
+    await redis.setex(`session:${token}`, 604800, JSON.stringify(sessionData));
+    
+    return token;
+};
+
 module.exports = {
     sendOtp,
     verifyOtp,
+    login,
+    createSession,
 };

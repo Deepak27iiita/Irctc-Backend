@@ -45,12 +45,67 @@ exports.verifyOtp = asyncHandler(async (req, res) => {
 
     const { user } = await authService.verifyOtp(otpSessionId, otp);
 
+    const sessionToken = await authService.createSession(user);
+
     // Clear the OTP session cookie
     res.clearCookie("otpSessionId");
+
+    res.cookie("sessionToken", sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res.status(201).json({
         success: true,
         message: "Email verified and account created successfully",
         user,
+    });
+});
+
+// ─── Login ────────────────────────────────────────────────────────────────────
+
+exports.login = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        throw new BadRequestError("Email and password are required");
+    }
+
+    const user = await authService.login(email, password);
+    const sessionToken = await authService.createSession(user);
+
+    res.cookie("sessionToken", sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    }).status(200).json({
+        success: true,
+        message: "Logged in successfully",
+        user: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email
+        },
+    });
+});
+
+// ─── Logout ───────────────────────────────────────────────────────────────────
+
+exports.logout = asyncHandler(async (req, res) => {
+    const token = req.cookies?.sessionToken;
+
+    if (token) {
+        const RedisClient = require("../config/redis");
+        const redis = RedisClient.getInstance();
+        await redis.del(`session:${token}`);
+    }
+
+    res.clearCookie("sessionToken").status(200).json({
+        success: true,
+        message: "Logged out successfully",
     });
 });
