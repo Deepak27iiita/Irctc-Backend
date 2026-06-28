@@ -1,8 +1,8 @@
-const { ConflictError, BadRequestError, NotFoundError } = require("../utils/error");
+const { ConflictError, BadRequestError, NotFoundError, TooManyRequestsError } = require("../utils/error");
 const prisma = require("../config/prisma");
 const bcrypt = require("bcryptjs");
 const { sendOtpEmail, verifyOtpEmail } = require("../utils/email");
-const { generateAndStoreOtp } = require("../utils/otp");
+const { generateAndStoreOtp, ATTEMPT_MAX } = require("../utils/otp");
 const { config } = require("../config");
 const RedisClient = require("../config/redis");
 const crypto = require("crypto");
@@ -39,6 +39,13 @@ const verifyOtp = async (otpSessionId, otp) => {
 
     const session = JSON.parse(raw);
 
+    const attemptsKey = `otp:attempts:${session.email}`;
+    const attemptsCount = parseInt(await redis.get(attemptsKey) || '0', 10);
+
+    if (attemptsCount >= ATTEMPT_MAX) {
+        throw new TooManyRequestsError("Too many attempts to verify OTP");
+    }
+
     // Verify HMAC
     const expectedHash = crypto
         .createHmac("sha256", config.HMAC_SECRET)
@@ -46,6 +53,8 @@ const verifyOtp = async (otpSessionId, otp) => {
         .digest("hex");
 
     if (expectedHash !== session.hash) {
+        await redis.incr(attemptsKey);
+        await redis.expire(attemptsKey, parseInt(config.OTP_TTL || '300', 10));
         throw new BadRequestError("Invalid OTP", "OTP_INVALID");
     }
 
@@ -79,6 +88,7 @@ const verifyOtp = async (otpSessionId, otp) => {
     // Clean up Redis keys
     await redis.del(sessionKey);
     await redis.del(`otp:rate:${session.email}`);
+    await redis.del(attemptsKey);
 
     // Send welcome email
     await verifyOtpEmail({ email: session.email });

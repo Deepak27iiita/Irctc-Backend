@@ -1,4 +1,3 @@
-const RATE_MAX = parseInt(process.env.OTP_RATE_MAX) || 5;
 const otpGenerator = require("otp-generator");
 const { config } = require("../config");
 const crypto = require("crypto");
@@ -7,7 +6,9 @@ const { TooManyRequestsError } = require("./error");
 
 const redis = RedisClient.getInstance();
 const HMAC_SECRET = config.HMAC_SECRET;
-const OTP_TTL = parseInt(config.OTP_TTL) || 300;
+const OTP_TTL = parseInt(config.OTP_TTL || '300', 10);
+const RATE_MAX = parseInt(config.OTP_RATE_MAX_PER_HOUR || '5', 10);
+const ATTEMPT_MAX = parseInt(config.OTP_MAX_VERIFY_ATTEMPTS || '5', 10);
 function hmacFor(email, otp) {
   return crypto
     .createHmac("sha256", HMAC_SECRET)
@@ -46,4 +47,5 @@ async function generateAndStoreOtp(meta) {
 
 module.exports = {
   generateAndStoreOtp,
+  ATTEMPT_MAX,
 };
