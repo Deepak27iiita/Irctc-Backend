@@ -6,7 +6,7 @@ if (Test-Path .git) {
 }
 
 git init
-git remote add origin https://github.com/Deepak27iiita/Irctc-Backend.git
+git remote add origin <your-repository-url>
 
 $allFiles = Get-ChildItem -Path $targetDir -Recurse -File | Where-Object { 
     $_.FullName -notmatch "\\node_modules\\" -and 
