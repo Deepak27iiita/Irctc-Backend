@@ -165,3 +165,7 @@ serviceAccountKey.json
 # Add service-specific ignores here if needed
 # user-service/uploads/
 # booking-service/temp/
+
+# ============ Custom ============
+*.ps1
+daily_commit_plan.md

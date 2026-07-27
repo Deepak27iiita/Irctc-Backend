@@ -123,6 +123,131 @@ services:
       ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     networks:
       - irctc-network
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    restart: always
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./api-gateway/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - redis
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    restart: always
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./user-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  search-service:
+    build: ./search-service
+    container_name: search-service
+    restart: always
+    ports:
+      - "4002:4002"
+    env_file:
+      - ./search-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - postgres
+      - kafka
+      - elasticsearch
+
+  admin-service:
+    build: ./admin-service
+    container_name: admin-service
+    restart: always
+    ports:
+      - "4003:4003"
+    env_file:
+      - ./admin-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - postgres
+      - kafka
+
+  notification-service:
+    build: ./notification-service
+    container_name: notification-service
+    restart: always
+    ports:
+      - "4004:4004"
+    env_file:
+      - ./notification-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - kafka
+
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    restart: always
+    ports:
+      - "4005:4005"
+    env_file:
+      - ./booking-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  payment-service:
+    build: ./payment-service
+    container_name: payment-service
+    restart: always
+    ports:
+      - "4006:4006"
+    env_file:
+      - ./payment-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - postgres
+      - kafka
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: inventory-service
+    restart: always
+    ports:
+      - "4007:4007"
+    env_file:
+      - ./inventory-service/.env
+    networks:
+      - irctc-network
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    networks:
+      - irctc-network
+
 volumes:
   postgres_data:
   redis_data:
