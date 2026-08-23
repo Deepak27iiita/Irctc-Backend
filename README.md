@@ -34,7 +34,7 @@ This project demonstrates a complete microservices architecture for a railway bo
 - **Containerization** — Docker Compose for the full infra stack
 - **Resilience** — Rate limiting, circuit breakers, Dead-Letter Queues (DLQ) on every Kafka consumer
 
-**🎓 Learning Objectives:**
+**🎓 Learning Objectives: **
 
 - Build scalable microservices with database-per-service ownership
 - Implement real-world authentication flows (OTP + JWT + Google OAuth)
