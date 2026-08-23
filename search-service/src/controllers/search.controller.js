@@ -1,7 +1,7 @@
 const asyncHandler = require('../utils/asyncHandler');
 const { BadRequestError } = require('../utils/error');
 const searchService = require('../services/search.service');
-
+// search service 
 exports.searchTrains = asyncHandler(async (req, res) => {
      const { from, to, date } = req.query;
      if (!from || !to) throw new BadRequestError('from and to station names/codes are required');
