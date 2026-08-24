@@ -14,7 +14,7 @@ exports.getScheduleSeats = asyncHandler(async (req, res) => {
      const { scheduleId } = req.params;
      const { status, seatType, fromSeq, toSeq } = req.query; // --- SEGMENT BOOKING: added fromSeq/toSeq
 
-     const filters = {};
+     const filters = {}; // filters
      if (status) filters.status = status.toUpperCase();
      if (seatType) filters.seatType = seatType.toUpperCase();
      if (fromSeq) filters.fromSeq = fromSeq; // --- SEGMENT BOOKING
