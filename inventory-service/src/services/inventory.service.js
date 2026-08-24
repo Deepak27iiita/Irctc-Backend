@@ -53,7 +53,7 @@ const initializeInventory = async (eventData) => {
 
           await tx.seatInventory.createMany({ data: seatData });
 
-          // --- SEGMENT BOOKING: Persist route topology for segment overlap checks ---
+          // --- SEGMENT BOOKING: Persist route topology for segment overlap checks    ---
           if (eventData.route && eventData.route.length > 0) {
                const routeStopData = eventData.route.map(rs => ({
                     scheduleId,
