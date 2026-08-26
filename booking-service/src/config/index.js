@@ -9,7 +9,7 @@ const config = {
      ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
      REDIS_URL: process.env.REDIS_URL,
 
-     // Inter-service communication
+     // Inter-service communication 
      INVENTORY_SERVICE_URL: process.env.INVENTORY_SERVICE_URL || 'http://localhost:4007',
      PAYMENT_SERVICE_URL: process.env.PAYMENT_SERVICE_URL || 'http://localhost:4006',
      USER_SERVICE_URL: process.env.USER_SERVICE_URL || 'http://localhost:4001',
