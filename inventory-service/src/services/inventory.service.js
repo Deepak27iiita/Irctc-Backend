@@ -5,7 +5,7 @@ const { retryTransaction } = require('../utils/retryTransaction');
 const { BadRequestError, NotFoundError, ConflictError, ForbiddenError } = require('../utils/error');
 const { config } = require('../config');
 
-// ─── Kafka Event Handlers ───────────────────────────────────────────────────
+// ─── Kafka Event Handlers   ───────────────────────────────────────────────────
 
 const initializeInventory = async (eventData) => {
      const { scheduleId, trainId, trainNumber, trainName, departureDate, seats } = eventData;
