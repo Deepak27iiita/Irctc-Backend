@@ -10,7 +10,7 @@ exports.createBooking = asyncHandler(async (req, res) => {
           throw new BadRequestError('scheduleId, seatIds, passengers, and idempotencyKey are required');
      }
 
-     // --- SEGMENT BOOKING: Pass segment params to service ---
+     // --- SEGMENT BOOKING: Pass segment params to service   ---
      const result = await bookingService.createBooking(
           userId, scheduleId, seatIds, passengers, idempotencyKey,
           fromStationId, toStationId, fromSeq, toSeq
