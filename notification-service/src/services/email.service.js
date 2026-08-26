@@ -11,7 +11,7 @@ const {
 } = require('../templates');
 
 sgMail.setApiKey(config.SENDGRID_API_KEY);
-
+// sgMail
 class EmailService {
      constructor() {
           this.from = config.MAIL_SEND
