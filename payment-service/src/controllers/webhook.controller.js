@@ -6,6 +6,7 @@ const logger = require('../config/logger');
  * Razorpay webhook handler.
  * IMPORTANT: This endpoint receives raw body (not JSON-parsed)
  * for signature verification. The route must use express.raw().
+ * webhooks
  */
 exports.razorpayWebhook = asyncHandler(async (req, res) => {
      const signature = req.headers['x-razorpay-signature'];
