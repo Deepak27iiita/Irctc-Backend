@@ -5,7 +5,7 @@ const { getGateway } = require('./gateways/gateway.factory');
 const { BadRequestError, NotFoundError, ConflictError } = require('../utils/error');
 const { config } = require('../config');
 
-// ─── Idempotency Helper ──────────────────────────────────────────────────────
+// ─── Idempotency Helper   ──────────────────────────────────────────────────────
 
 const withIdempotency = async (key, fn) => {
      const existing = await prisma.idempotencyRecord.findUnique({ where: { eventKey: key } });
