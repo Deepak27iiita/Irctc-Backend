@@ -3,7 +3,7 @@ const { ForbiddenError } = require('../utils/error');
 
 /**
  * Validates that the request comes from an internal service
- * by checking the x-internal-service-key header.
+ * by checking the x-internal-service-key header .
  */
 const internalAuth = (req, res, next) => {
      const serviceKey = req.headers['x-internal-service-key'];
