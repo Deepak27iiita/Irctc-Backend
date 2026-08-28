@@ -21,7 +21,7 @@ exports.getProfile = asyncHandler(async(req, res) =>{
 })
 
 exports.updateProfile = asyncHandler(async(req, res) =>{
-     // TODO TASK FOR YOU
+     // TODO remaining task 
 })
 
 exports.deleteProfile = asyncHandler(async(req, res) =>{
