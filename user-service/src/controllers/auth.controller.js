@@ -37,7 +37,7 @@ exports.verifyOTP = asyncHandler(async(req, res) =>{
      if(!otp || !otpSessionId){
           throw new BadRequestError("OTP or OTPSession is missing")
      }
-
+     // save the user and clear cookie
      const user = await authService.verifyOTP(otp, otpSessionId);
      res.clearCookie("otp_session");
      return res.status(201).json({
