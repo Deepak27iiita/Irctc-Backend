@@ -3,7 +3,7 @@ const { BadRequestError, NotFoundError } = require("../utils/error");
 const userService = require('../services/user.service');
 const logger = require("../config/logger");
 
-
+// get the user profile 
 exports.getProfile = asyncHandler(async(req, res) =>{
      const userId = req.user.id;
      if(!userId){
