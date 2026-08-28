@@ -25,7 +25,7 @@ exports.updateProfile = asyncHandler(async(req, res) =>{
 })
 
 exports.deleteProfile = asyncHandler(async(req, res) =>{
-     // TODO TASK FOR YOU
+     // TODO remaining tasks
 })
 
 exports.getUserInternal = asyncHandler(async(req, res) =>{
