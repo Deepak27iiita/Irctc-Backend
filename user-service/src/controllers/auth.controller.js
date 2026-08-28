@@ -29,7 +29,7 @@ exports.sendOTP = asyncHandler(async(req, res) =>{
           message: "OTP sent successfully"
      })
 })
-
+// veryfying the otp
 exports.verifyOTP = asyncHandler(async(req, res) =>{
      const {otp} = req.body;
      const otpSessionId = req.cookies.otp_session;
