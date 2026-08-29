@@ -11,7 +11,7 @@ exports.searchTrains = asyncHandler(async (req, res) => {
 
 exports.autocomplete = asyncHandler(async (req, res) => {
      const { q } = req.query;
-     if (!q || q.length < 2) throw new BadRequestError('Provide at least 2 characters');
+     if (!q || q.length < 2) throw new BadRequestError('Provide at least 2 characters');// checking the query 
      const suggestions = await searchService.autocompleteStation(q);
      res.json({ success: true, data: suggestions });
 });
