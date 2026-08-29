@@ -20,7 +20,7 @@ class SearchConsumer {
                ],
                fromBeginning: true,
           });
-
+         // running 
           await consumer.run({
                eachMessage: withDLQ(producer, KAFKA_TOPICS.DLQ_SEARCH, logger, async ({ topic, partition, message, parsedValue }) => {
                     logger.info(`Processing ${topic}`, { partition, offset: message.offset });
